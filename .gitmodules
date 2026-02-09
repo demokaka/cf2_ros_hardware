@@ -1,0 +1,8 @@
+[submodule "setup/src/ros_ws/src/crazyswarm2"]
+	path = setup/src/ros_ws/src/crazyswarm2
+	url = https://github.com/demokaka/crazyswarm2.git
+	branch = dev
+[submodule "setup/src/ros_ws/src/motion_capture_tracking"]
+	path = setup/src/ros_ws/src/motion_capture_tracking
+	url = https://github.com/demokaka/motion_capture_tracking.git
+	branch = dev_jazzy
