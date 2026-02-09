@@ -1,0 +1,7 @@
+{
+	"proxies": {
+		"http-proxy": "http://localhost:3128",
+		"https-proxy": "http://localhost:3128",
+		"no-proxy": "*127.0.0.0/8"
+	}
+}

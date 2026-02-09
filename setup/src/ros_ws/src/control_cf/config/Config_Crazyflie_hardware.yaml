@@ -1,0 +1,78 @@
+simid: 22
+
+uris:
+# - radio://0/80/2M/E7E7E7E7E1
+# - radio://0/80/2M/E7E7E7E7E2
+# - radio://0/80/2M/E7E7E7E7E3
+# - radio://0/80/2M/E7E7E7E7E4
+# - radio://0/80/2M/E7E7E7E7E7
+# - radio://0/80/2M/E7E7E7E7E9
+- radio://0/80/2M/E7E7E7E7E0
+# - radio://0/80/2M/E7E7E7E7E5
+# - radio://0/80/2M/E7E7E7E7E6
+# - radio://0/80/2M/E7E7E7E7E7
+drone_bodies:
+# - DroneE1
+# - DroneE2
+# - DroneE3
+# - DroneE4
+# - DroneE7
+# - DroneE9
+- DroneEE0
+# - DroneEE5
+# - DroneEE6
+# - DroneEE7
+mass:
+# E1
+- 34.09
+# E2
+- 31.06
+# E3
+- 32.85
+# E7
+- 32.85
+# E9
+# - 32.06
+
+Ts: 0.1
+
+Tsim: 30
+
+T_coeff:
+- 1
+- 1
+- 1
+- 1
+
+alpha:
+- 1.0
+- 1.0
+- 1.0
+- 1.0
+
+PWM0:
+# # E1
+# - 40000
+# # E2
+# - 40000
+# # - 40872
+# # E3
+# - 40000
+# # - 42420
+# # E9
+# - 40000
+# # - 40640
+# EE0
+- 35000
+# EE5
+- 35000
+# EE6
+- 35000
+# EE7
+- 35000
+
+bias:
+- [0.0,0.0]
+- [0.0,0.0]
+- [0.0,-0.0]
+- [-0.0,0.0]

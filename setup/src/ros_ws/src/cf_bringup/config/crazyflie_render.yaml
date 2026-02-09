@@ -1,0 +1,14 @@
+# List of agents to render. Only fields used by jinja_gen.py are needed.
+crazyflies:
+  - name: cf_1
+    cf_id: 1
+    cffirm_udp_port: 19950
+    cflib_udp_port: 19850
+    pose: [0.0, 0.5, 0.2]
+
+  - name: cf_2
+    cf_id: 2
+    # If ports omitted, defaults below use cf_id to derive them
+    cffirm_udp_port: 19951
+    cflib_udp_port: 19851
+    pose: [0.5, 0.0, 0.2, 0, 0, 0]

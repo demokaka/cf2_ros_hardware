@@ -1,0 +1,114 @@
+ARG CODE_VERSION=humble
+# FROM osrf/ros:${CODE_VERSION}-desktop-full
+FROM ros:${CODE_VERSION}
+
+LABEL maintainer="LCIS_CO4SYS_TEAM"
+LABEL version="1.0.0"
+LABEL description="Minimal docker setup for simulation in ROS and Gazebo"
+LABEL contact="cong-khanh.dinh@lcis.grenoble-inp.fr"
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# ENV GZ_RELEASE=harmonic
+ENV ROS2_DISTRO=humble
+# make sure the shell used is /bin/bash
+SHELL ["/bin/bash","-c"]
+
+
+RUN apt-get update
+
+# Install essential packages for development
+RUN apt-get install -y \
+    # net-tools package (includes ifconfig,... commands)
+    net-tools \
+    # iputils-ping package (includes ping,... commands)
+    iputils-ping \
+    git \
+    nano \
+    curl \
+    wget \
+    terminator \
+    vim \
+    software-properties-common \
+    build-essential \
+    cmake \
+    # python package
+    python3 python3-pip 
+
+# #install Gazebo Garden/Harmonic
+# RUN /bin/sh -c ' curl https://packages.osrfoundation.org/gazebo.gpg --output /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg' \
+#   && /bin/sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null'
+# RUN  apt-get update \
+#   && apt-get install -y gz-${GZ_RELEASE}
+
+
+RUN apt install -y python-is-python3 
+RUN apt install -y libboost-program-options-dev libusb-1.0-0-dev
+RUN pip3 install rowan transforms3d
+# RUN apt install -y ros-${ROS2_DISTRO}-ros-gz${GZ_RELEASE}
+RUN apt install libxcb-cursor-dev -y
+RUN pip install Jinja2
+
+# move to /root/ folder first
+WORKDIR /root/
+
+ARG REPO_CFFIRMWARE=https://github.com/bitcraze/crazyflie-firmware.git
+
+# clone repos
+RUN git clone $REPO_CFFIRMWARE crazyflie-firmware 
+
+RUN apt-get install make gcc-arm-none-eabi swig3.0 -y && \
+    ln -s /usr/bin/swig3.0 /usr/bin/swig 
+    
+# install cffirmware
+RUN cd /root/crazyflie-firmware && \
+    git submodule update --init --recursive && \
+    cd /root/crazyflie-firmware && \
+    make cf2_defconfig && \
+    make -j$(nproc) && \
+    make bindings_python && \
+    cd build && \
+    python3 setup.py install --user && \
+    export PYTHONPATH=/root/crazyflie-firmware/build:$PYTHONPATH
+
+ARG REPO_CFLIB=https://github.com/bitcraze/crazyflie-lib-python.git
+RUN git clone  $REPO_CFLIB crazyflie-lib-python 
+    
+# install cflib 
+RUN pip install setuptools==78.1.0
+RUN pip install -U pip
+RUN pip install -e /root/crazyflie-lib-python
+
+ARG REPO_CFCLIENTS=https://github.com/bitcraze/crazyflie-clients-python
+RUN git clone $REPO_CFCLIENTS crazyflie-clients-python
+# install cfclient
+RUN pip install -e /root/crazyflie-clients-python 
+
+RUN apt install ros-${ROS2_DISTRO}-foxglove-bridge -y
+
+RUN apt install ros-${ROS2_DISTRO}-rmw-cyclonedds-cpp -y
+
+RUN apt-get install -y libpcl-dev
+
+RUN apt install -y  \ 
+    ros-${ROS2_DISTRO}-rqt* \
+    ros-${ROS2_DISTRO}-tf-transformations  \
+    ros-${ROS2_DISTRO}-joy
+
+RUN apt install -y  ros-${ROS2_DISTRO}-rviz2
+RUN pip install casadi osqp pandas control
+# setup ros2 environment variables
+RUN echo "source /ros_entrypoint.sh" >> $HOME/.bashrc
+RUN echo "export ROS_DOMAIN_ID=40" >> $HOME/.bashrc
+RUN echo "export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" >> $HOME/.bashrc
+
+# Add user and add it to sudo group
+RUN sudo usermod -a -G plugdev root
+COPY to_copy/99-bitcraze.rules /etc/udev/rules.d/.
+
+WORKDIR /root/ros_ws
+
+# RUN echo "source ~/ros_ws/install/setup.bash" >> $HOME/.bashrc
+
+ENTRYPOINT [ "/ros_entrypoint.sh" ]
+CMD [ "bash" ]
