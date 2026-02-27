@@ -1,0 +1,22 @@
+# LANDING SEQUENCE
+
+# Trajectory for crazyflie_1
+clear crazyflie_1
+init  crazyflie_1 0.0 0.0 1.0
+wp    crazyflie_1 0.0 0.0 0.0 5.0
+gen   crazyflie_1
+
+# Trajectory for crazyflie_2
+clear crazyflie_2
+init  crazyflie_2 0.0 1.0 1.0
+wp    crazyflie_2 0.0 1.0 0.0 5.0
+gen   crazyflie_2
+
+# Trajectory for crazyflie_3
+clear crazyflie_3
+init  crazyflie_3 0.0 -1.0 1.0
+wp    crazyflie_3 0.0 -1.0 0.0 5.0
+gen   crazyflie_3
+
+# send the trajectories
+send all

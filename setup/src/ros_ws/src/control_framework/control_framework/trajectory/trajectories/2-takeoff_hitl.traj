@@ -1,0 +1,11 @@
+# TAKEOFF SEQUENCE
+
+# Trajectory for DroneE4
+clear DroneE4
+init  DroneE4 0.0 0.0 0.0
+wp    DroneE4 0.0 0.0 0.6 5.0
+gen   DroneE4
+
+
+# send the trajectories
+send DroneE4

@@ -7,7 +7,7 @@ import numpy as np
 import yaml
 import os
 from ament_index_python.packages import get_package_share_directory
-from rclpy.qos import DurabilityPolicy, HistoryPolicy, QoSProfile, ReliabilityPolicy
+from rclpy.qos import DurabilityPolicy, QoSHistoryPolicy, QoSProfile, ReliabilityPolicy
 from rclpy.callback_groups import ReentrantCallbackGroup, MutuallyExclusiveCallbackGroup
 from nav_msgs.msg import Odometry
 
@@ -21,7 +21,7 @@ from control_cf.mpc_solvers import *
 
 
 QOSP = QoSProfile(
-    history=HistoryPolicy.KEEP_LAST,
+    history=QoSHistoryPolicy.KEEP_LAST,
     depth=1,
     reliability=ReliabilityPolicy.BEST_EFFORT
 )
