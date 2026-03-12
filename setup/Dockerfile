@@ -96,7 +96,30 @@ RUN apt install -y  \
     ros-${ROS2_DISTRO}-joy
 
 RUN apt install -y  ros-${ROS2_DISTRO}-rviz2
-RUN pip install casadi osqp pandas control
+RUN pip install casadi osqp pandas control matplotlib
+
+### ACADOS INSTALLATION
+# fetch acados repository
+RUN cd /root && \
+    git clone https://github.com/acados/acados.git && \
+    cd acados && \
+    git submodule update --recursive --init 
+
+# build and install acados for python
+RUN cd /root/acados && \
+    mkdir -p build && \
+    cd build && \
+    cmake -DACADOS_WITH_QPOASES=ON -DBUILD_SHARED_LIBS=ON .. && \
+    make install -j4
+
+# start the python setup
+# it is recommended to install in a virtual environment but for now we will install it globally
+RUN pip install -e /root/acados/interfaces/acados_template
+
+# export environment variables for acados
+ENV ACADOS_SOURCE_DIR=/root/acados
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/root/acados/lib
+
 # setup ros2 environment variables
 RUN echo "source /ros_entrypoint.sh" >> $HOME/.bashrc
 RUN echo "export ROS_DOMAIN_ID=40" >> $HOME/.bashrc

@@ -6,3 +6,6 @@
 	path = setup/src/ros_ws/src/motion_capture_tracking
 	url = https://github.com/demokaka/motion_capture_tracking.git
 	branch = dev_jazzy
+[submodule "setup/src/ros_ws/src/control_framework"]
+	path = setup/src/ros_ws/src/control_framework
+	url = git@github.com:sorinandres/control_framework.git
